@@ -1,0 +1,50 @@
+<div class="login-container">
+  <div class="login-form">
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
+      <h2 class="form-title">Login</h2>
+
+      <div class="control-group">
+        <div class="control">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" />
+          <div
+            class="error-message"
+            *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched)"
+          >
+            <span *ngIf="emailControl.errors?.['required']">Email is required.</span>
+            <span *ngIf="emailControl.errors?.['email']">Please enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password" />
+          <div class="error-message">
+            @if (passwordControl.invalid && (passwordControl.dirty || passwordControl.touched)) {
+              @if (passwordControl.errors?.['required']) {
+                <span>Password is required</span>
+              }
+              @if (
+                !passwordControl.errors?.['required'] &&
+                passwordControl.errors?.['doesNotContainQuestionMark']
+              ) {
+                <span>Password must contain at least one '?'</span>
+              }
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="button"
+          type="submit"
+          [disabled]="passwordControl.errors || emailControl.errors"
+        >
+          Login
+        </button>
+        <a routerLink="/signup">Don't have an account? Sign up</a>
+      </div>
+    </form>
+  </div>
+</div>
