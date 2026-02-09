@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs';
 import { STORED_EMAIL } from '../../../constants';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../auth.service';
 
 let initialEmail = '';
 const storedEmail = window.localStorage.getItem(STORED_EMAIL);
@@ -36,6 +37,8 @@ function mustContainQuestionMark(control: AbstractControl) {
 export class Login implements OnInit {
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
+  private authService = inject(AuthService);
+
   reactiveForm = new FormGroup({
     email: new FormControl(initialEmail, {
       validators: [Validators.required, Validators.email],
@@ -56,8 +59,9 @@ export class Login implements OnInit {
   onSubmit() {
     const { email, password } = this.reactiveForm.value;
     if (email === 'admin@example.com' && password === '123456?') {
+      this.authService.login(email);
       this.router.navigate(['dashboard']);
-    } 
+    }
   }
 
   ngOnInit(): void {

@@ -136,3 +136,17 @@ hr {
   color: #0056b3;
   text-decoration: underline;
 }
+
+.control-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.control-checkbox input {
+  margin: 0;
+}
+
+.control-checkbox label {
+  margin: 0;
+}

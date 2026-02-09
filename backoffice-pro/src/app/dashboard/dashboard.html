@@ -1,1 +1,59 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>AdminPro</h2>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-users"></i> Users</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" (click)="onLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </aside>
+  <main class="main-content">
+    <header class="main-header">
+      <div class="header-search">
+        <input type="text" placeholder="Search..." />
+        <i class="fas fa-search"></i>
+      </div>
+      <div class="header-user" *ngIf="user$ | async as user">
+        <i class="fas fa-bell"></i>
+        <i class="fas fa-user-circle"></i>
+        <span>{{ user.email }}</span>
+      </div>
+    </header>
+    <section class="content-area">
+      <h1>Welcome to your Dashboard</h1>
+      <p>Here's a quick overview of your application's status.</p>
+
+      <div class="card-container">
+        <div class="card">
+          <h3>New Users</h3>
+          <p>150</p>
+        </div>
+        <div class="card">
+          <h3>Sales</h3>
+          <p>$12,500</p>
+        </div>
+        <div class="card">
+          <h3>Pending Orders</h3>
+          <p>32</p>
+        </div>
+        <div class="card">
+          <h3>System Health</h3>
+          <p>Good</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

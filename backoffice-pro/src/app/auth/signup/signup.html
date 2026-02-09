@@ -1,6 +1,6 @@
 <div class="signup-container">
   <div class="signup-form">
-    <form>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <h2 class="form-title">Welcome!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
@@ -10,7 +10,7 @@
           <input id="email" type="email" formControlName="email" />
         </div>
 
-        <div class="control-row">
+        <div class="control-row" formGroupName="passwords">
           <div class="control">
             <label for="password">Password</label>
             <input id="password" type="password" formControlName="password" />
@@ -38,7 +38,7 @@
           </div>
         </div>
 
-        <fieldset>
+        <fieldset formGroupName="adress">
           <legend>Your Address</legend>
           <div class="control-row">
             <div class="control">
@@ -78,25 +78,25 @@
           </select>
         </div>
 
-        <fieldset>
+        <fieldset formGroupName="source">
           <legend>How did you find us?</legend>
-          <div class="control">
-            <input type="checkbox" id="google" formControlName="google" />
+          <div class="control-checkbox">
+            <input type="checkbox" id="google" formControlName="0" />
             <label for="google">Google</label>
           </div>
-          <div class="control">
-            <input type="checkbox" id="friend" formControlName="friend" />
+          <div class="control-checkbox">
+            <input type="checkbox" id="friend" formControlName="1" />
             <label for="friend">Referred by friend</label>
           </div>
-          <div class="control">
-            <input type="checkbox" id="other" formControlName="other" />
+          <div class="control-checkbox">
+            <input type="checkbox" id="other" formControlName="2" />
             <label for="other">Other</label>
           </div>
         </fieldset>
 
         <div class="control">
           <label for="terms-and-conditions">
-            <input type="checkbox" id="terms-and-conditions" formControlName="terms" />
+            <input type="checkbox" id="terms-and-conditions" formControlName="agree" />
             I agree to the terms and conditions
           </label>
         </div>
