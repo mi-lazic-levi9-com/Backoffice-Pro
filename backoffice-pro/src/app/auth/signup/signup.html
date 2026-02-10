@@ -8,6 +8,11 @@
         <div class="control">
           <label for="email">Email</label>
           <input id="email" type="email" formControlName="email" />
+          @if (emailControl.errors?.['emailIsTaken']) {
+            <div class="error-message">
+              <span>Account with this email already exists.</span>
+            </div>
+          }
         </div>
 
         <div class="control-row" formGroupName="passwords">

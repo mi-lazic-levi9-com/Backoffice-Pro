@@ -41,6 +41,12 @@
   gap: 1rem;
 }
 
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
 .control {
   flex: 1;
   text-align: left;

@@ -1,0 +1,27 @@
+<div class="users-container">
+  <h1>Our Team</h1>
+  <p>Meet the talented individuals who make our company great.</p>
+
+  @if (users()) {
+    <div class="card-container">
+      @for (user of users(); track user.email) {
+        <a [routerLink]="['/dashboard/users', user.id]" class="user-card">
+          <img
+            class="user-image"
+            [src]="'http://localhost:3000/' + user.image.src"
+            [alt]="user.firstName"
+          />
+          <div class="user-info">
+            <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+            <p class="user-email">{{ user.email }}</p>
+            <p class="user-address">{{ user.address }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  }
+
+  @if (isFetching()) {
+    <p class="loading-indicator">Loading users...</p>
+  }
+</div>

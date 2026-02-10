@@ -1,0 +1,55 @@
+<div class="user-detail-container">
+  @if (user()) {
+    <div class="user-detail-header">
+      <button class="back-button" (click)="onGoBack()">
+        <i class="fas fa-arrow-left"></i> Back to Team
+      </button>
+      <h1>Edit User Profile</h1>
+      <p>Update the details for {{ user()?.firstName }} {{ user()?.lastName }}</p>
+    </div>
+
+    <div class="user-detail-content">
+      <div class="user-image-section">
+        <img
+          [src]="'http://localhost:3000/' + user()?.image?.src"
+          [alt]="user()?.firstName"
+          class="user-image"
+        />
+      </div>
+      <div class="user-form-section">
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="firstName">First Name</label>
+              <input id="firstName" type="text" formControlName="firstName" />
+            </div>
+            <div class="form-field">
+              <label for="lastName">Last Name</label>
+              <input id="lastName" type="text" formControlName="lastName" />
+            </div>
+            <div class="form-field full-width">
+              <label for="email">Email</label>
+              <input id="email" type="email" formControlName="email" readonly />
+            </div>
+            <div class="form-field full-width">
+              <label for="address">Address</label>
+              <input id="address" type="text" formControlName="address" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="save-button"
+              [disabled]="!editForm.valid || !editForm.dirty"
+            >
+              Save Changes
+            </button>
+            <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  } @else {
+    <p class="loading-indicator">Loading user details...</p>
+  }
+</div>

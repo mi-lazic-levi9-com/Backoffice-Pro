@@ -1,59 +1,69 @@
-# BackofficePro
+# Backoffice Pro
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+Backoffice Pro is a modern, single-page application built with Angular for managing users and settings in a back-office environment. It features a clean, responsive interface with a dashboard, user management, and a secure authentication system.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **User Authentication**: Secure login and signup functionality.
+- **Dashboard**: A central hub for navigating the application.
+- **User Management**: View a list of users and edit their details.
+- **Reactive Forms**: Modern, editable forms for user data.
+- **Client-Side Routing**: Seamless navigation between pages.
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Frontend**: Angular, TypeScript, Tailwind CSS
+- **Backend**: Node.js, Express
+- **Testing**: Vitest
 
-## Code scaffolding
+## Getting Started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerequisites
 
-```bash
-ng generate component component-name
-```
+- Node.js and npm
+- Angular CLI
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Installation
 
-```bash
-ng generate --help
-```
+1.  **Clone the repository:**
 
-## Building
+    ```bash
+    git clone https://github.com/mi-lazic-levi9-com/Backoffice-Pro.git
+    cd Backoffice-Pro
+    ```
 
-To build the project run:
+2.  **Install frontend dependencies:**
 
-```bash
-ng build
-```
+    ```bash
+    npm install
+    ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+3.  **Install backend dependencies:**
+    ```bash
+    cd backend
+    npm install
+    cd ..
+    ```
 
-## Running unit tests
+### Running the Application
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+1.  **Start the backend server:**
 
-```bash
-ng test
-```
+    ```bash
+    npm start --prefix backend
+    ```
 
-## Running end-to-end tests
+    The backend will be running on `http://localhost:3000`.
 
-For end-to-end (e2e) testing, run:
+2.  **Start the frontend development server:**
+    ```bash
+    npm start
+    ```
+    The frontend will be running on `http://localhost:4200`.
 
-```bash
-ng e2e
-```
+## Available Scripts
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `npm start`: Starts the frontend development server.
+- `npm run build`: Builds the application for production.
+- `npm test`: Runs unit tests.
+- `npm start --prefix backend`: Starts the backend server.
