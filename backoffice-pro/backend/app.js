@@ -42,11 +42,39 @@ app.delete('/users/:id', async (req, res) => {
 
   if (userIndex >= 0) {
     updatedUsers.splice(userIndex, 1);
+  } else {
+    return res.status(404).json({ message: 'User not found' });
   }
 
   await fs.writeFile(USERS_SOURCE_DATA, JSON.stringify(updatedUsers));
 
   res.status(200).json({ users: updatedUsers });
+});
+
+app.put('/users/:id', async (req, res) => {
+  const userId = req.params.id;
+  const updatedUserData = req.body;
+
+  const userFileContent = await fs.readFile(USERS_SOURCE_DATA);
+  const usersData = JSON.parse(userFileContent);
+
+  const userIndex = usersData.findIndex((u) => u.id === userId);
+
+  if (userIndex === -1) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  const updatedUser = {
+    ...usersData[userIndex],
+    ...updatedUserData,
+    id: userId,
+  };
+
+  usersData[userIndex] = updatedUser;
+
+  await fs.writeFile(USERS_SOURCE_DATA, JSON.stringify(usersData));
+
+  res.status(200).json({ user: updatedUser });
 });
 
 // 404

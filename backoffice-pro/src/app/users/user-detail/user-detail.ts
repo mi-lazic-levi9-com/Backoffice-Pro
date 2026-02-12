@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, UsersService } from '../users.service';
 import { CommonModule, Location } from '@angular/common';
 
@@ -16,6 +16,7 @@ export class UserDetail implements OnInit {
   private fb = inject(FormBuilder);
   private location = inject(Location);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   user = signal<IUser | undefined>(undefined);
   editForm!: FormGroup;
@@ -54,9 +55,9 @@ export class UserDetail implements OnInit {
         ...currentUser,
         ...this.editForm.value,
       };
-      // this.usersService.updateUser(updatedUser).subscribe(() => {
-      //   this.router.navigate(['/dashboard/users']);
-      // });
+      this.usersService.updateUser(updatedUser.id, updatedUser).subscribe(() => {
+        this.router.navigate(['/dashboard/users']);
+      });
     }
   }
 
