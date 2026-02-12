@@ -55,4 +55,45 @@ export class UsersService {
       }),
     );
   }
+
+  updateUser(userId: string, updatedUserData: Partial<IUser>) {
+    const prevUsers = this.usersSignal();
+    const userIndex = prevUsers.findIndex((u) => u.id === userId);
+
+    if (userIndex === -1) {
+      return throwError(() => new Error(`User with id ${userId} not found.`));
+    }
+
+    // Optimistic update
+    const updatedUsers = [...prevUsers];
+    updatedUsers[userIndex] = {
+      ...updatedUsers[userIndex],
+      ...updatedUserData,
+    };
+    this.usersSignal.set(updatedUsers);
+
+    return this.httpClient
+      .put<{ user: IUser }>(`http://localhost:3000/users/${userId}`, updatedUserData)
+      .pipe(
+        tap((response) => {
+          // If backend returns the final state, we can update again to be sure
+          const finalUsers = [...this.usersSignal()];
+          const finalUserIndex = finalUsers.findIndex((u) => u.id === userId);
+          if (finalUserIndex !== -1) {
+            finalUsers[finalUserIndex] = response.user;
+            this.usersSignal.set(finalUsers);
+          }
+        }),
+        catchError((error) => {
+          // Rollback on error
+          this.usersSignal.set(prevUsers);
+          return throwError(
+            () =>
+              new Error(
+                `Failed to update user ${userId}: ${error?.message ?? 'Unknown error occurred'}`,
+              ),
+          );
+        }),
+      );
+  }
 }
