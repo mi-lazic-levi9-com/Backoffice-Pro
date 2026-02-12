@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { catchError, map, tap, throwError } from 'rxjs';
 
 export interface IUser {
   id: string;
@@ -29,6 +29,24 @@ export class UsersService {
     return this.httpClient.get<{ users: IUser[] }>(url).pipe(
       map((resData) => {
         return resData.users;
+      }),
+      tap((users) => this.users.set(users)),
+    );
+  }
+
+  removeUser(userId: string) {
+    const prevUsers = this.users();
+
+    //optimistic update
+    if (prevUsers.some((u) => u.id === userId)) {
+      this.users.set(prevUsers.filter((u) => u.id !== userId));
+    }
+
+    return this.httpClient.delete(`http://localhost:3000/users/${userId}`).pipe(
+      catchError((error) => {
+        //because of optimistic update
+        this.users.set(prevUsers);
+        return throwError(() => new Error('something went wrong when deleting user'));
       }),
     );
   }

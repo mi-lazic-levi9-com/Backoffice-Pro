@@ -16,6 +16,9 @@
             <p class="user-email">{{ user.email }}</p>
             <p class="user-address">{{ user.address }}</p>
           </div>
+          <div class="card-actions">
+            <button class="delete-btn" (click)="onDelete(user.id, $event)">Delete</button>
+          </div>
         </a>
       }
     </div>

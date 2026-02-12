@@ -41,6 +41,27 @@
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+.card-actions {
+  padding: 0 1.5rem 0.5rem 1.5rem;
+  margin-top: auto;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
 
 .user-image {
   width: 120px;
