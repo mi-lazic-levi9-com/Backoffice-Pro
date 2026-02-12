@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { IUser, UsersService } from './users.service';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-users',
@@ -29,13 +30,13 @@ export class Users implements OnInit {
   onDelete(userId: string, event: MouseEvent) {
     event.stopPropagation();
     event.preventDefault();
-    const subscription = this.usersService.removeUser(userId).subscribe({
-      next: () => {
-        console.log('deleting user with id ', userId);
-      },
-    });
-    this.destroyRef.onDestroy(() => {
-      subscription.unsubscribe();
-    });
+    this.usersService
+      .removeUser(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          console.log('deleting user with id ', userId);
+        },
+      });
   }
 }
