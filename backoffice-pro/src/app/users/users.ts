@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { IUser, UsersService } from './users.service';
-import { RouterLink } from '@angular/router';
+import { UsersService } from './users.service';
+import { Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -14,6 +14,7 @@ export class Users implements OnInit {
   private destroyRef = inject(DestroyRef);
   isFetching = signal(false);
   users = this.usersService.loadedUsers;
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.isFetching.set(true);
@@ -38,5 +39,9 @@ export class Users implements OnInit {
           console.log('deleting user with id ', userId);
         },
       });
+  }
+
+  addUser() {
+    this.router.navigate(['dashboard/users/new']);
   }
 }

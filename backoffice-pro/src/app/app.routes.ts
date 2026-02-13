@@ -18,6 +18,7 @@ export const routes: Routes = [
     children: [
       { path: 'users', component: Users },
       { path: 'users/:id', component: UserDetail },
+      { path: 'users/new', component: UserDetail },
       {
         path: 'settings',
         component: Settings,

@@ -77,6 +77,43 @@ app.put('/users/:id', async (req, res) => {
   res.status(200).json({ user: updatedUser });
 });
 
+app.post('/users', async (req, res) => {
+  const { firstName, lastName, email, address } = req.body;
+
+  if (!firstName || !lastName || !email || !address) {
+    return res.status(400).json({
+      message: 'FirstName, lastName, email, and adress are required',
+    });
+  }
+
+  const userFileContent = await fs.readFile(USERS_SOURCE_DATA);
+  const usersData = JSON.parse(userFileContent);
+
+  const emailExists = usersData.some((u) => u.email === email);
+  if (emailExists) {
+    return res.status(409).json({
+      message: 'Email already exists',
+    });
+  }
+
+  const newUser = {
+    id: `${firstName.charAt(0).toLowerCase()}${Date.now()}`,
+    firstName,
+    lastName,
+    email,
+    address,
+    image: {
+      src: 'default-user.jpg', // Assuming a default image
+    },
+  };
+
+  usersData.push(newUser);
+
+  await fs.writeFile(USERS_SOURCE_DATA, JSON.stringify(usersData));
+
+  res.status(201).json({ user: newUser });
+});
+
 // 404
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
