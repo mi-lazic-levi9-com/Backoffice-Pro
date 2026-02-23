@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, map, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, take, tap, throwError } from 'rxjs';
 
 export interface IUser {
   id: string;
@@ -95,5 +95,54 @@ export class UsersService {
           );
         }),
       );
+  }
+
+  createNewUser(newUserData: Omit<IUser, 'id' | 'image'>) {
+    const tempId = `temp-${Date.now()}`;
+    const tempUser: IUser = {
+      ...newUserData,
+      id: tempId,
+      image: { src: 'default-user.jpg' }, // Placeholder image
+    };
+
+    // Optimistic update
+    this.usersSignal.update((users) => [...users, tempUser]);
+
+    return this.httpClient.post<{ user: IUser }>(`http://localhost:3000/users`, newUserData).pipe(
+      tap((response) => {
+        // Sync with real data from backend
+        this.usersSignal.update((users) => {
+          const userIndex = users.findIndex((u) => u.id === tempId);
+          if (userIndex !== -1) {
+            const updatedUsers = [...users];
+            updatedUsers[userIndex] = response.user;
+            return updatedUsers;
+          }
+          return users;
+        });
+      }),
+      catchError((error) => {
+        // Rollback on error
+        this.usersSignal.update((users) => users.filter((u) => u.id !== tempId));
+        return throwError(
+          () => new Error(`Failed to create user: ${error?.message ?? 'Unknown error occurred'}`),
+        );
+      }),
+    );
+  }
+
+  getUserById(id: string): Observable<IUser | null> {
+    if (this.loadedUsers().length > 0) {
+      const user = this.loadedUsers().find((u) => u.id === id);
+      return of(user || null);
+    } else {
+      return this.loadUsers().pipe(
+        take(1),
+        map(() => {
+          const user = this.usersSignal().find((u) => u.id === id);
+          return user || null;
+        }),
+      );
+    }
   }
 }

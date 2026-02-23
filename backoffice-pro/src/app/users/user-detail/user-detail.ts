@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, UsersService } from '../users.service';
 import { CommonModule, Location } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-detail',
@@ -19,52 +20,52 @@ export class UserDetail implements OnInit {
   private router = inject(Router);
 
   user = signal<IUser | undefined>(undefined);
+  isNewUserForm = signal(false);
   editForm!: FormGroup;
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.paramMap.get('id');
-    if (userId) {
-      const subscription = this.usersService.loadUsers().subscribe({
-        next: (users) => {
-          this.user.set(users.find((u) => u.id === userId));
-        },
-        complete: () => {
-          this.initializeForm(this.user()!);
-        },
-      });
-
-      this.destroyRef.onDestroy(() => {
-        subscription.unsubscribe();
-      });
-    }
+    this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ user }) => {
+      if (user) {
+        this.isNewUserForm.set(false);
+        this.user.set(user);
+        this.initializeForm(user);
+      } else {
+        this.isNewUserForm.set(true);
+        this.initializeForm();
+      }
+    });
   }
 
-  initializeForm(user: IUser): void {
+  initializeForm(user?: IUser): void {
     this.editForm = this.fb.group({
-      firstName: [user.firstName, Validators.required],
-      lastName: [user.lastName, Validators.required],
-      email: [user.email, [Validators.required, Validators.email]],
-      address: [user.address, Validators.required],
+      firstName: [user?.firstName, Validators.required],
+      lastName: [user?.lastName, Validators.required],
+      email: [user?.email, [Validators.required, Validators.email]],
+      address: [user?.address, Validators.required],
     });
   }
 
   onSubmit(): void {
-    const currentUser = this.user();
-    if (this.editForm.valid && currentUser) {
-      const updatedUser: IUser = {
-        ...currentUser,
-        ...this.editForm.value,
-      };
-      this.usersService.updateUser(updatedUser.id, updatedUser).subscribe(() => {
+    if (this.isNewUserForm()) {
+      this.usersService.createNewUser(this.editForm.value).subscribe(() => {
         this.router.navigate(['/dashboard/users']);
       });
+    } else {
+      const currentUser = this.user();
+      if (this.editForm.valid && currentUser) {
+        const updatedUser: IUser = {
+          ...currentUser,
+          ...this.editForm.value,
+        };
+        this.usersService.updateUser(updatedUser.id, updatedUser).subscribe(() => {
+          this.router.navigate(['/dashboard/users']);
+        });
+      }
     }
   }
 
   onCancel(): void {
-    if (this.user()) {
-      this.initializeForm(this.user()!);
-    }
+    this.initializeForm(this.user());
   }
 
   onGoBack(): void {

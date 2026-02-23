@@ -1,6 +1,11 @@
 <div class="users-container">
-  <h1>Our Team</h1>
-  <p>Meet the talented individuals who make our company great.</p>
+  <div class="header-container">
+    <div>
+      <h1>Our Team</h1>
+      <p>Meet the talented individuals who make our company great.</p>
+    </div>
+    <button class="new-user-btn" (click)="addUser()">New User</button>
+  </div>
 
   @if (users()) {
     <div class="card-container">
