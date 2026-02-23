@@ -42,7 +42,13 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="submit" class="save-button">Save Changes</button>
+            <button
+              type="submit"
+              class="save-button"
+              [disabled]="editForm.invalid || !editForm.dirty"
+            >
+              Save Changes
+            </button>
             <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
           </div>
         </form>

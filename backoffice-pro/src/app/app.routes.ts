@@ -7,6 +7,7 @@ import { authGuard } from './auth.guard';
 import { Users } from './users/users';
 import { Settings } from './settings/settings';
 import { UserDetail } from './users/user-detail/user-detail';
+import { userResolver } from './users/user-detail/user-detail.resolver';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -17,7 +18,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'users', component: Users },
-      { path: 'users/:id', component: UserDetail },
+      {
+        path: 'users/:id',
+        component: UserDetail,
+        resolve: {
+          user: userResolver,
+        },
+      },
       { path: 'users/new', component: UserDetail },
       {
         path: 'settings',

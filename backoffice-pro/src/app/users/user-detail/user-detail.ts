@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser, UsersService } from '../users.service';
 import { CommonModule, Location } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-user-detail',
@@ -23,24 +24,16 @@ export class UserDetail implements OnInit {
   editForm!: FormGroup;
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.paramMap.get('id');
-    if (userId === 'new') {
-      this.isNewUserForm.set(true);
-      this.initializeForm();
-    } else if (userId) {
-      const subscription = this.usersService.loadUsers().subscribe({
-        next: (users) => {
-          this.user.set(users.find((u) => u.id === userId));
-        },
-        complete: () => {
-          this.initializeForm(this.user()!);
-        },
-      });
-
-      this.destroyRef.onDestroy(() => {
-        subscription.unsubscribe();
-      });
-    }
+    this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ user }) => {
+      if (user) {
+        this.isNewUserForm.set(false);
+        this.user.set(user);
+        this.initializeForm(user);
+      } else {
+        this.isNewUserForm.set(true);
+        this.initializeForm();
+      }
+    });
   }
 
   initializeForm(user?: IUser): void {
@@ -72,9 +65,7 @@ export class UserDetail implements OnInit {
   }
 
   onCancel(): void {
-    if (this.user()) {
-      this.initializeForm(this.user()!);
-    }
+    this.initializeForm(this.user());
   }
 
   onGoBack(): void {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, map, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, take, tap, throwError } from 'rxjs';
 
 export interface IUser {
   id: string;
@@ -129,5 +129,20 @@ export class UsersService {
         );
       }),
     );
+  }
+
+  getUserById(id: string): Observable<IUser | null> {
+    if (this.loadedUsers().length > 0) {
+      const user = this.loadedUsers().find((u) => u.id === id);
+      return of(user || null);
+    } else {
+      return this.loadUsers().pipe(
+        take(1),
+        map(() => {
+          const user = this.usersSignal().find((u) => u.id === id);
+          return user || null;
+        }),
+      );
+    }
   }
 }

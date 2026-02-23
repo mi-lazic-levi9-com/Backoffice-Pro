@@ -82,7 +82,7 @@ app.post('/users', async (req, res) => {
 
   if (!firstName || !lastName || !email || !address) {
     return res.status(400).json({
-      message: 'FirstName, lastName, email, and adress are required',
+      message: 'FirstName, lastName, email, and address are required',
     });
   }
 
